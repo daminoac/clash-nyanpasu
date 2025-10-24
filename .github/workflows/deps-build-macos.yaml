@@ -47,6 +47,19 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
 
+      - name: Cache Rust dependencies
+        uses: swatinem/rust-cache@v2
+        with:
+          key: ${{ runner.os }}-rust-${{ inputs.arch || 'native' }}-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Cache Node modules
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules
+            ~/.pnpm-store
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}-${{ runner.arch }}
+
       - uses: maxim-lobanov/setup-xcode@v1
         with:
           xcode-version: 16

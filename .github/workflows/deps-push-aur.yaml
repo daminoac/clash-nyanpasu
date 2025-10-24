@@ -1,0 +1,44 @@
+name: 'update aur'
+
+on:
+  workflow_dispatch:
+    inputs:
+      nightly:
+        description: 'Nightly'
+        required: true
+        type: boolean
+        default: false
+
+  workflow_call:
+    inputs:
+      nightly:
+        description: 'Nightly'
+        required: true
+        type: boolean
+        default: false
+
+jobs:
+  aur:
+    name: update aur
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: update
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq sed curl
+          VERSION=$(curl -Ls "https://github.com/libnyanpasu/clash-nyanpasu/releases/download/pre-release/latest.json" | jq -r '.version')
+          pkgver=$(echo "$VERSION" | sed 's/-/_/') aur/clash-nyanpasu-nightly-bin/PKGBUILD
+          sed -i "s/_pkgver=.*/_pkgver=$VERSION" aur/clash-nyanpasu-nightly-bin/PKGBUILD
+
+      - name: Publish AUR package
+        uses: KSXGitHub/github-actions-deploy-aur@v4.1.1
+        with:
+          pkgname: clash-nyanpasu-nightly-bin
+          pkgbuild: aur/clash-nyanpasu-nightly-bin/PKGBUILD
+          commit_username: ${{ secrets.AUR_USERNAME }}
+          commit_email: ${{ secrets.AUR_EMAIL }}
+          ssh_private_key: ${{ secrets.AUR_SSH_PRIVATE_KEY }}
+          commit_message: Update AUR package

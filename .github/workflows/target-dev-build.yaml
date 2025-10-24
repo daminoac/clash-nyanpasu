@@ -197,3 +197,11 @@ jobs:
     with:
       nightly: true
     secrets: inherit
+
+  aur:
+    name: update aur
+    needs: [update_tag]
+    uses: ./.github/workflows/deps-push-aur.yaml
+    with:
+      nightly: true
+    secrets: inherit
