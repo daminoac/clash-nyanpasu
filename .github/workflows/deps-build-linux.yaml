@@ -54,13 +54,13 @@ jobs:
         with:
           key: ${{ runner.os }}-rust-${{ inputs.arch || 'native' }}-${{ hashFiles('**/Cargo.lock') }}
 
-     - name: Cache Node modules
-       uses: actions/cache@v4
-       with:
-         path: |
-           node_modules
-           ~/.pnpm-store
-         key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}-${{ runner.arch }}
+      - name: Cache Node modules
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules
+            ~/.pnpm-store
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}-${{ runner.arch }}
 
       - name: Install Rust stable
         run: |
