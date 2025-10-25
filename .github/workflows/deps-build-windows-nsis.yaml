@@ -80,14 +80,6 @@ jobs:
         with:
           key: ${{ runner.os }}-rust-${{ inputs.arch || 'native' }}-${{ hashFiles('**/Cargo.lock') }}
 
-      - name: Cache Node modules
-        uses: actions/cache@v4
-        with:
-          path: |
-            node_modules
-            ~/.pnpm-store
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}-${{ runner.arch }}
-
       - name: Install Rust stable
         run: |
           rustup install stable --profile minimal --no-self-update
@@ -110,7 +102,7 @@ jobs:
 
       - name: Install Node.js dependencies
         run: |
-          pnpm i --no-optional
+          pnpm i
       - name: Prepare sidecars and resources
         run: |
           $condition = '${{ inputs.arch }}'
