@@ -110,7 +110,7 @@ jobs:
 
       - name: Install Node.js dependencies
         run: |
-          pnpm i
+          pnpm i --no-optional
       - name: Prepare sidecars and resources
         run: |
           $condition = '${{ inputs.arch }}'
